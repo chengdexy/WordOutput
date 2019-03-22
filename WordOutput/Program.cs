@@ -51,10 +51,11 @@ namespace WordOutput
                 }
                 //3. 对列表中每个文件执行
                 //   获取所需属性并赋值给DocModel对象
+                Console.WriteLine("程序正在运行......");
                 var n = 1;
                 fileList.ForEach(file =>
                 {
-                    Console.WriteLine($"正在进行第{n}个, 共{fileList.Count()}个");
+                    //Console.WriteLine($"正在进行第{n}个, 共{fileList.Count()}个");
                     DocModel doc = GetDocModel(file);
                     db.DocModels.Add(doc);
                     db.SaveChanges();
