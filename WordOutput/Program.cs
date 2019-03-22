@@ -13,21 +13,29 @@ namespace WordOutput {
         static void Main(string[] args) {
             //程序流程开始
             MainContext db = new MainContext();
-            //1. 获取运行位置路径
-            Console.Write("请输入文件夹路径->");
-            string appPath= Console.ReadLine();
-            if (!Directory.Exists(appPath))
-            {
-                Console.WriteLine("路径不存在.");
-                Console.ReadKey();
-            }
-            else
-            {
+            //0. 检测数据库是否已经包含数据
+            int count = db.DocModels.Count();
+            if (count != 0) {
+                Console.WriteLine($"数据库中已经包含导出的数据({count}条),请直接使用,或清空后再运行此程序.");
+                Console.WriteLine(@"立刻清空数据库?(y/n)");
+                string choose = Console.ReadLine();
+                if (choose == "y") {
+                    //清空数据库
+                    db.DocModels.RemoveRange(db.DocModels.ToList());
+                    db.SaveChanges();
+                }
+            } else {
+                //1. 获取运行位置路径
+                string appPath;
+                if (args.Length > 0) {
+                    appPath = args[0];
+                } else {
+                    appPath = @"D:\工作\项目\知蜂堂\新病历";
+                }
                 //2. 获得待导入文件列表(文件名,文件状态:未导入,导入成功,导入失败)
                 List<string> fileList = new List<string>();
                 DirectoryInfo folder = new DirectoryInfo(appPath);
-                foreach (FileInfo file in folder.GetFiles("*.doc"))
-                {
+                foreach (FileInfo file in folder.GetFiles("*.doc")) {
                     fileList.Add(file.FullName);
                 }
                 //3. 对列表中每个文件执行
@@ -58,6 +66,7 @@ namespace WordOutput {
                 //多出来一行
                 n = 1;
             }
+            //TODO：这里需要进一步优化，应直接输出最终结果，不应是混乱的文本。
             DocModel model = new DocModel {
                 Name = table.Rows[0].Cells[1].GetText().Replace("\r", ",").Replace("\a", ";"),
                 Gender = table.Rows[0].Cells[3].GetText().Replace("\r", ",").Replace("\a", ";"),
