@@ -82,7 +82,8 @@ namespace WordOutput
                 n = 1;
             }
             //TODO：这里需要进一步优化，应直接输出最终结果，不应是混乱的文本。
-            var name = table.Rows[0].Cells[1].GetText().Replace("\a", "").Replace("\r", "");
+            var nameForTest = table.Rows[0].Cells[1].GetText().Replace("\a", "").Replace("\r", "");
+            var name = string.IsNullOrWhiteSpace(nameForTest) ? "(未留姓名)" : nameForTest;
             var genderForTest = table.Rows[0].Cells[3].GetText().Replace("\a", "").Replace("\r", "");
             var gender = string.IsNullOrWhiteSpace(genderForTest) ? "男" : genderForTest;
             var ageForTest = table.Rows[0].Cells[5].GetText().Replace("\a", "").Replace("\r", "");
