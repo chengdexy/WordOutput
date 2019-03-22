@@ -13,48 +13,30 @@ namespace WordOutput {
         static void Main(string[] args) {
             //程序流程开始
             MainContext db = new MainContext();
-            //0. 检测数据库是否已经包含数据
-            int count = db.DocModels.Count();
-            if (count != 0) {
-                Console.WriteLine($"数据库中已经包含导出的数据({count}条),请直接使用,或清空后再运行此程序.");
-                Console.WriteLine(@"立刻清空数据库?(y/n)");
-                string choose = Console.ReadLine();
-                if (choose == "y") {
-                    //清空数据库
-                    db.DocModels.RemoveRange(db.DocModels.ToList());
-                    db.SaveChanges();
-                }
-            } else {
-                //1. 获取运行位置路径
-                string appPath;
-                if (args.Length > 0) {
-                    appPath = args[0];
-                } else {
-                    appPath = @"D:\工作\项目\知蜂堂\新病历";
-                }
-                //2. 获得待导入文件列表(文件名,文件状态:未导入,导入成功,导入失败)
-                List<string> fileList = new List<string>();
-                DirectoryInfo folder = new DirectoryInfo(appPath);
-                foreach (FileInfo file in folder.GetFiles("*.doc")) {
-                    fileList.Add(file.FullName);
-                }
-                //3. 对列表中每个文件执行
-                //   获取所需属性并赋值给DocModel对象
-                var n = 1;
-                fileList.ForEach(file => {
-                    Console.WriteLine($"正在进行第{n}个, 共{fileList.Count()}个");
-                    DocModel doc = GetDocModel(file);
-                    db.DocModels.Add(doc);
-                    db.SaveChanges();
-                    n++;
-                });
-                //   存入数据库
-                //4. 检查是否存入成功
-                //5. 处理未成功文件
-                //程序流程结束
-                Console.WriteLine("全部完成, 按任意键退出....");
-                Console.ReadKey();
+            //1. 获取运行位置路径
+            string appPath = @"F:\desktop\newfile";
+            //2. 获得待导入文件列表(文件名,文件状态:未导入,导入成功,导入失败)
+            List<string> fileList = new List<string>();
+            DirectoryInfo folder = new DirectoryInfo(appPath);
+            foreach (FileInfo file in folder.GetFiles("*.doc")) {
+                fileList.Add(file.FullName);
             }
+            //3. 对列表中每个文件执行
+            //   获取所需属性并赋值给DocModel对象
+            var n = 1;
+            fileList.ForEach(file => {
+                Console.WriteLine($"正在进行第{n}个, 共{fileList.Count()}个");
+                DocModel doc = GetDocModel(file);
+                db.DocModels.Add(doc);
+                db.SaveChanges();
+                n++;
+            });
+            //   存入数据库
+            //4. 检查是否存入成功
+            //5. 处理未成功文件
+            //程序流程结束
+            Console.WriteLine("全部完成, 按任意键退出....");
+            Console.ReadKey();
         }
 
         private static DocModel GetDocModel(string file) {
