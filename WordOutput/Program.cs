@@ -33,14 +33,11 @@ namespace WordOutput
             else
             {
                 //1. 获取运行位置路径
-                string appPath;
-                if (args.Length > 0)
+                string appPath = "";
+                while (!Directory.Exists(appPath))
                 {
-                    appPath = args[0];
-                }
-                else
-                {
-                    appPath = @"D:\Shared\测试数据";
+                    Console.WriteLine("请输入导入文件夹完整路径：");
+                    appPath = Console.ReadLine();
                 }
                 //2. 获得待导入文件列表(文件名,文件状态:未导入,导入成功,导入失败)
                 List<string> fileList = new List<string>();
