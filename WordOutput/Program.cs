@@ -53,10 +53,19 @@ namespace WordOutput
                 fileList.ForEach(file =>
                 {
                     //Console.WriteLine($"正在进行第{n}个, 共{fileList.Count()}个");
-                    DocModel doc = GetDocModel(file);
-                    db.DocModels.Add(doc);
-                    db.SaveChanges();
-                    n++;
+                    try
+                    {
+                        DocModel doc = GetDocModel(file);
+                        db.DocModels.Add(doc);
+                        db.SaveChanges();
+                        n++;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error!!!");
+                        Console.WriteLine(ex.Source + " " + ex.Message + "\n" + file);
+                        Console.ReadKey();
+                    }
                 });
                 //   存入数据库
                 //4. 检查是否存入成功
